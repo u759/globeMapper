@@ -103,15 +103,21 @@ function MetricsControl() {
 }
 
 function Map() {
-  const [events, setEvents] = useState([]);
+  const [currentDate, setCurrentDate] = useState(null);
+  const [markerLimit, setMarkerLimit] = useState(500);
+  const { locations, isLoading } = useLocations(currentDate, markerLimit);
 
   const maxBounds = [
     [-90, -180], // Southwest coordinates
     [90, 180]    // Northeast coordinates
   ];
 
-  const handleEventsUpdate = (newEvents) => {
-    setEvents(newEvents);
+  const handleDateChange = (formattedDate) => {
+    setCurrentDate(formattedDate);
+  };
+
+  const handleLimitChange = (newLimit) => {
+    setMarkerLimit(newLimit);
   };
 
   return (
@@ -123,7 +129,7 @@ function Map() {
         zoomControl={false}
         maxBounds={maxBounds}
         maxBoundsViscosity={1.0}
-        minZoom={2}
+        minZoom={2.4}
         worldCopyJump={false}
       >
         <MapLayers />
