@@ -13,11 +13,20 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
 
+let count = 0;
+
 function Map() {
   const [currentDate, setCurrentDate] = useState(null);
   const [markerLimit, setMarkerLimit] = useState(500);
   const [summary, setSummary] = useState('Loading summary...');
   const { locations, isLoading } = useLocations(currentDate, markerLimit);
+
+  useEffect(() => {
+    if (!isLoading && locations.length > 0 && count === 0) {
+      handleSliderRelease();
+      count++;
+    }
+  }, [locations, isLoading]);
 
   const maxBounds = [
     [-90, -180], // Southwest coordinates
@@ -34,18 +43,15 @@ function Map() {
 
   const handleSliderRelease = async () => {
     if (!Array.isArray(locations) || locations.length === 0) return;
-
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
       const titles = locations
         .filter(location => location && location.name)
         .map(location => location.name);
-
       if (titles.length === 0) {
         setSummary('No event titles available');
         return;
       }
-
       const titlesString = titles.join(", ");
       console.log("Sending titles to Gemini:", titlesString);
       const prompt = `Summarize these events in a couple short sentences: ${titlesString}`;
@@ -54,6 +60,7 @@ function Map() {
       const response = await result.response;
       const text = response.text();
       setSummary(text);
+      
     } catch (error) {
       console.error('Error getting summary:', error);
       setSummary('Failed to generate summary');
@@ -80,7 +87,7 @@ function Map() {
           onLimitChange={handleLimitChange}
           onSliderRelease={handleSliderRelease}
         />
-        <MetricsControl />
+        <MetricsControl summary={summary} />
       </MapContainer>
     </div>
   );
