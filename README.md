@@ -1,5 +1,3 @@
-# globeMapper
-
 # NewsMapper
 
 NewsMapper is an interactive news app which scrapes world events and places them geographically on a map. Instead of browsing news from a list, you can see exactly where events are occurring.
