@@ -8,10 +8,9 @@ import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
 
-function MetricsControl() {
+function MetricsControl({ summary }) {
   const map = useMap();
   const [visibleMarkers, setVisibleMarkers] = useState(0);
-  const [summary, setSummary] = useState('Loading summary...');
   const { locations } = useLocations();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -36,40 +35,6 @@ function MetricsControl() {
       map.off('zoomend', updateMetrics);
     };
   }, [map, locations]);
-
-  useEffect(() => {
-    const generateSummary = async () => {
-      if (!locations || locations.length === 0) {
-        setSummary('No events to summarize');
-        return;
-      }
-
-      try {
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-        const titles = locations
-          .filter(location => location && location.name)
-          .map(location => location.name);
-
-        if (titles.length === 0) {
-          setSummary('No event titles available');
-          return;
-        }
-
-        const titlesString = titles.join(", ");
-        const prompt = `Summarize these events in a couple short sentences: ${titlesString}`;
-        
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-        setSummary(text);
-      } catch (error) {
-        console.error('Error getting summary:', error);
-        setSummary('Failed to generate summary');
-      }
-    };
-
-    generateSummary();
-  }, [locations]);
 
   const togglePanel = () => {
     setIsOpen(!isOpen);
