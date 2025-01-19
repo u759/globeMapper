@@ -132,3 +132,39 @@
 .leaflet-popup-close-button {
     display: none !important;
 }
+
+.metrics-container {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+
+.metrics-panel {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  font-size: 16px;
+}
+
+.metrics-panel h3 {
+  margin: 0 0 10px 0;
+  font-size: 22px;
+}
+
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  gap: 15px;
+}
+
+.metric-item span:first-child {
+  color: #666;
+}
+
+.metric-item span:last-child {
+  font-weight: bold;
+}
