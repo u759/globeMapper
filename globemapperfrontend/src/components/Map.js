@@ -1,19 +1,15 @@
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
-import MapLayers from './MapLayers';
 import LocationMarkers from './LocationMarkers';
-import { MAP_CENTER, DEFAULT_ZOOM } from '../constants/mapConstants';
 import 'leaflet/dist/leaflet.css';
 import { useState } from 'react';
 import { useMap } from 'react-leaflet';
 
 function DateSliderControl() {
-  // Calculate end date (today)
   const endDate = new Date();
-  // Calculate start date (52 weeks ago)
   const startDate = new Date();
-  startDate.setDate(startDate.getDate() - (52 * 7)); // Go back 52 weeks
+  startDate.setDate(startDate.getDate() - (52 * 7));
   
-  const totalWeeks = 52; // Fixed number of weeks
+  const totalWeeks = 52;
   
   const [currentEndDate, setCurrentEndDate] = useState(endDate);
 
@@ -30,7 +26,7 @@ function DateSliderControl() {
 
   const getStartOfWeek = (date) => {
     const result = new Date(date);
-    result.setDate(date.getDate() - 6); // Go back 6 days
+    result.setDate(date.getDate() - 6);
     return result;
   };
 
@@ -75,12 +71,6 @@ function DateSliderControl() {
 }
 
 function Map() {
-  // Define bounds for the map (roughly the whole world)
-  const bounds = [
-    [-90, -180], // Southwest coordinates
-    [90, 180]    // Northeast coordinates
-  ];
-
   return (
     <div className="map-container">
       <MapContainer
@@ -88,20 +78,12 @@ function Map() {
         zoom={2}
         scrollWheelZoom={true}
         zoomControl={false}
-        style={{ height: "100vh", width: "100%" }}
-        maxBounds={bounds}
-        maxBoundsViscosity={1.0}  // Makes the bounds "sticky"
-        minZoom={2}               // Prevent zooming out too far
-        worldCopyJump={false}     // Prevents the world from repeating
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          noWrap={true}  // Prevents the tiles from repeating
-          bounds={bounds}
         />
         <ZoomControl position="bottomright" />
-        <MapLayers />
         <LocationMarkers />
         <DateSliderControl />
       </MapContainer>
