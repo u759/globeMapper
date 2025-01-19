@@ -118,49 +118,48 @@
 
 /* Position the slider container */
 .date-slider-container {
-  position: fixed !important;
-  bottom: 20px !important;
-  left: 20px !important;
-  width: 300px !important;
-  height: 80px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  z-index: 1000 !important;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 800px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
 }
 
 /* Style the inner slider content */
 .date-slider-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-  backdrop-filter: blur(5px);
+  background: white;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.date-display-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 40px;
+.sliders-row {
   display: flex;
+  gap: 30px;
   justify-content: center;
-  align-items: center;
 }
 
-.date-display {
+.slider-column {
+  flex: 1;
+  min-width: 200px;
+}
+
+.date-display-container,
+.limit-display-container {
   text-align: center;
-  padding: 10px;
-  font-family: monospace;
+  margin-bottom: 10px;
+}
+
+.date-display,
+.limit-display {
   font-size: 14px;
+  color: #333;
 }
 
 .slider-track {
-  padding: 0 20px;
+  margin-bottom: 5px;
 }
 
 .date-slider {
@@ -174,9 +173,10 @@
 
 .date-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
+  appearance: none;
   width: 16px;
   height: 16px;
-  background: #2c3e50;
+  background: #2196F3;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -184,7 +184,7 @@
 .date-slider::-moz-range-thumb {
   width: 16px;
   height: 16px;
-  background: #2c3e50;
+  background: #2196F3;
   border-radius: 50%;
   cursor: pointer;
   border: none;
@@ -205,5 +205,41 @@
     max-width: 250px; /* Adjust this value to your preferred width */
     margin: 0;
     padding: 5px 0;
+}  
+
+.sliders-container {
+  display: flex;
+  gap: 20px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.date-slider-section,
+.marker-limit-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.date-display,
+.limit-display {
+  text-align: center;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.slider-track {
+  width: 100%;
+}
+
+.date-slider,
+.marker-slider {
+  width: 100%;
 }  
 
