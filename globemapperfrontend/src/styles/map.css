@@ -243,3 +243,58 @@
   width: 100%;
 }  
 
+.metrics-container {
+  position: absolute;
+  left: -300px; /* Start off-screen */
+  top: 50%;
+  transform: translateY(-50%);
+  transition: left 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.metrics-container.open {
+  left: 0;
+}
+
+.metrics-panel {
+  background: white;
+  padding: 15px;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+  width: 300px;
+}
+
+.toggle-button {
+  background: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  padding: 10px;
+  cursor: pointer;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 300px; /* Width of the panel */
+  height: 40px;
+  width: 25px;
+}
+
+.toggle-button:hover {
+  background: #f0f0f0;
+}
+
+.metrics-panel h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.metric-summary {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #666;
+}  
+
