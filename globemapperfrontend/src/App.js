@@ -1,20 +1,27 @@
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import logo from './logo.svg';
+import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import './App.css';
 
+// Fix the default icon issue
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+
 function App() {
-  // Sample locations - replace with your actual data
   const locations = [
     {
-      position: [51.505, -0.09],
-      name: "London",
-      description: "Capital of England"
-    },
-    {
-      position: [40.7128, -74.0060],
-      name: "New York",
-      description: "The Big Apple"
+      position: [49.2488, -122.9805],
+      name: "Burnaby City Hall",
+      description: "City in British Columbia, home to SFU and BCIT"
     }
   ];
 
@@ -30,10 +37,23 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {locations.map((location, index) => (
-          <Marker key={index} position={location.position}>
+          <Marker 
+            key={index} 
+            position={location.position}
+            eventHandlers={{
+              mouseover: (e) => {
+                e.target.openPopup();
+              },
+              mouseout: (e) => {
+                e.target.closePopup();
+              }
+            }}
+          >
             <Popup>
-              <h3>{location.name}</h3>
-              <p>{location.description}</p>
+              <div className="popup-content">
+                <h3>{location.name}</h3>
+                <p>{location.description}</p>
+              </div>
             </Popup>
           </Marker>
         ))}
