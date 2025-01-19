@@ -7,25 +7,26 @@ function CustomPopup({ location }) {
 
   return (
     <div 
-      className="popup-content" 
+      className="material-popup" 
       onClick={handleClick}
-      style={{ cursor: 'pointer' }}
     >
-      {/* Show the image if it exists */}
       {location.imageUrl && (
-        <img 
-          src={location.imageUrl} 
-          alt={location.name}
-          style={{ 
-            width: '200px',
-            height: 'auto',
-            marginBottom: '10px'
-          }}
-        />
+        <div className="popup-image-container">
+          <img 
+            src={location.imageUrl} 
+            alt={location.name}
+          />
+        </div>
       )}
-
-      <h3>{location.name}</h3>
-      <p>{location.description}</p>
+      <div className="popup-content">
+        <h3>{location.name}</h3>
+        <p>{location.description}</p>
+        {location.sourceUrl && (
+          <div className="popup-footer">
+            <span className="read-more">Read more</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

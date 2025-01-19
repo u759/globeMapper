@@ -19,12 +19,7 @@ function LocationMarkers() {
                         icon={DefaultIcon}
                         eventHandlers={{
                             mouseover: (e) => e.target.openPopup(),
-                            mouseout: (e) => e.target.closePopup(),
-                            click: () => {
-                                if (location.sourceUrl) {
-                                    window.open(location.sourceUrl, '_blank');
-                                }
-                            }
+                            click: (e) => e.target.openPopup()
                         }}
                     >
                         <Popup closeButton={false}>
