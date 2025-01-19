@@ -69,14 +69,18 @@ function DateSliderControl({ onDateChange, onLimitChange, onSliderRelease }) {
 
   return (
     <div 
-      className="leaflet-bottom leaflet-center date-slider-container"
+      className="date-slider-container"
       onMouseDown={preventMapMovement}
       onMouseMove={preventMapMovement}
       onClick={preventMapMovement}
       onTouchStart={preventMapMovement}
       onTouchMove={preventMapMovement}
     >
-      <div className="leaflet-control date-slider-inner">
+      <div className="date-slider-inner">
+        <div className="slider-headers">
+          <span className="slider-title">Time Interval</span>
+          <span className="slider-title">Number of Events</span>
+        </div>
         <div className="sliders-row">
           <div className="slider-column">
             <div className="date-display-container">
@@ -103,7 +107,7 @@ function DateSliderControl({ onDateChange, onLimitChange, onSliderRelease }) {
           <div className="slider-column">
             <div className="limit-display-container">
               <div className="limit-display">
-                Showing {currentLimit} markers
+                {currentLimit} events
               </div>
             </div>
             <div className="slider-track">
