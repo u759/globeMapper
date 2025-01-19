@@ -2,6 +2,7 @@ import { MapContainer, ZoomControl } from 'react-leaflet';
 import LocationMarkers from './LocationMarkers';
 import MapLayers from './MapLayers';
 import DateSliderControl from './DateSliderControl';
+import MetricsControl from './MetricsControl';
 import { useState, useEffect } from 'react';
 import { useLocations } from '../hooks/useLocations';
 import 'leaflet/dist/leaflet.css';
@@ -11,62 +12,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
-
-function MetricsControl({ summary }) {
-  const map = useMap();
-  const [visibleMarkers, setVisibleMarkers] = useState(0);
-
-  const { locations = [] } = useLocations() || {}; // Destructure the locations array from the object
-
-  useEffect(() => {
-    const updateMetrics = () => {
-      if (!Array.isArray(locations)) {
-        console.warn('Locations is not an array:', locations);
-        setVisibleMarkers(0);
-        return;
-      }
-
-      const bounds = map.getBounds();
-      const visible = locations.filter(location => 
-        location?.position && bounds.contains(location.position)
-      ).length;
-      setVisibleMarkers(visible);
-    };
-
-    // Update metrics when map moves or zooms
-    map.on('moveend', updateMetrics);
-    map.on('zoomend', updateMetrics);
-    
-    // Initial calculation
-    updateMetrics();
-
-    // Cleanup
-    return () => {
-      map.off('moveend', updateMetrics);
-      map.off('zoomend', updateMetrics);
-    };
-  }, [map, locations]);
-
-  return (
-    <div className="leaflet-left leaflet-middle metrics-container">
-      <div className="leaflet-control metrics-panel">
-        <h3>Map Metrics</h3>
-        <div className="metric-item">
-          <span>Visible Markers:</span>
-          <span>{visibleMarkers}</span>
-        </div>
-        <div className="metric-item">
-          <span>Total Markers:</span>
-          <span>{locations.length}</span>
-        </div>
-        <div className="metric-summary">
-          <h4>AI Summary</h4>
-          <p>{summary}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Map() {
   const [currentDate, setCurrentDate] = useState(null);
@@ -135,7 +80,7 @@ function Map() {
           onLimitChange={handleLimitChange}
           onSliderRelease={handleSliderRelease}
         />
-        <MetricsControl summary={summary} />
+        <MetricsControl />
       </MapContainer>
     </div>
   );
