@@ -7,11 +7,12 @@ import CustomPopup from './CustomPopup';
 function LocationMarkers({ locations }) {
     const map = useMap();
 
-    // Center map on markers when locations change
+    // Only fit bounds on initial load
     useEffect(() => {
-        if (locations && locations.length > 0) {
+        if (locations && locations.length > 0 && !map.hasInitialFit) {
             const bounds = L.latLngBounds(locations.map(loc => loc.position));
             map.fitBounds(bounds);
+            map.hasInitialFit = true;  // Set a flag to prevent future fits
         }
     }, [locations, map]);
 
