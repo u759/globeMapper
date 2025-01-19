@@ -196,5 +196,14 @@
 
 .date-slider:hover::-moz-range-thumb {
   background: #34495e;
+}
+
+.metric-summary p {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+    max-width: 250px; /* Adjust this value to your preferred width */
+    margin: 0;
+    padding: 5px 0;
 }  
 

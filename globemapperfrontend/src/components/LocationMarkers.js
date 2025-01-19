@@ -10,7 +10,7 @@ function LocationMarkers() {
         <>
             {locations.length === 0 ? console.log("🚨 No locations loaded yet!") : null}
             {locations.map((location, index) => {
-                console.log(`📍 Rendering marker ${index + 1}:`, location);
+                //console.log(`📍 Rendering marker ${index + 1}:`, location);
 
                 return (
                     <Marker
@@ -19,6 +19,7 @@ function LocationMarkers() {
                         icon={DefaultIcon}
                         eventHandlers={{
                             mouseover: (e) => e.target.openPopup(),
+                            
                             click: (e) => e.target.openPopup()
                         }}
                     >
