@@ -12,17 +12,23 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
 
-function MetricsControl() {
+function MetricsControl({ summary }) {
   const map = useMap();
   const [visibleMarkers, setVisibleMarkers] = useState(0);
-  const [summary, setSummary] = useState('Loading summary...');
-  const locations = useLocations();
+
+  const { locations = [] } = useLocations() || {}; // Destructure the locations array from the object
 
   useEffect(() => {
     const updateMetrics = () => {
+      if (!Array.isArray(locations)) {
+        console.warn('Locations is not an array:', locations);
+        setVisibleMarkers(0);
+        return;
+      }
+
       const bounds = map.getBounds();
       const visible = locations.filter(location => 
-        bounds.contains(location.position)
+        location?.position && bounds.contains(location.position)
       ).length;
       setVisibleMarkers(visible);
     };
@@ -40,46 +46,6 @@ function MetricsControl() {
       map.off('zoomend', updateMetrics);
     };
   }, [map, locations]);
-
-  useEffect(() => {
-    const generateSummary = async () => {
-      // Skip if locations array is empty (still loading)
-      if (locations.length === 0) {
-        setSummary('Loading summary...');
-        return;
-      }
-
-      // Check if this is the final locations update
-      const titles = locations.map(location => location.name).filter(Boolean);
-      if (titles.length === 0) {
-        setSummary('No event titles available');
-        return;
-      }
-
-      // Add a small delay to ensure we have all locations
-      const timeoutId = setTimeout(async () => {
-        try {
-          const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-          const titlesString = titles.join(", ");
-          console.log("Sending titles to Gemini:", titlesString);
-          const prompt = `Summarize these events in a few short sentences: ${titlesString}`;
-
-          const result = await model.generateContent(prompt);
-          const response = await result.response;
-          const text = response.text();
-          setSummary(text);
-        } catch (error) {
-          console.error('Error getting summary:', error);
-          setSummary('Failed to generate summary');
-        }
-      }, 1000); // 1 second delay
-
-      // Cleanup timeout if component unmounts or locations changes again
-      return () => clearTimeout(timeoutId);
-    };
-
-    generateSummary();
-  }, [locations]);
 
   return (
     <div className="leaflet-left leaflet-middle metrics-container">
@@ -105,6 +71,7 @@ function MetricsControl() {
 function Map() {
   const [currentDate, setCurrentDate] = useState(null);
   const [markerLimit, setMarkerLimit] = useState(500);
+  const [summary, setSummary] = useState('Loading summary...');
   const { locations, isLoading } = useLocations(currentDate, markerLimit);
 
   const maxBounds = [
@@ -118,6 +85,34 @@ function Map() {
 
   const handleLimitChange = (newLimit) => {
     setMarkerLimit(newLimit);
+  };
+
+  const handleSliderRelease = async () => {
+    if (!Array.isArray(locations) || locations.length === 0) return;
+
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const titles = locations
+        .filter(location => location && location.name)
+        .map(location => location.name);
+
+      if (titles.length === 0) {
+        setSummary('No event titles available');
+        return;
+      }
+
+      const titlesString = titles.join(", ");
+      console.log("Sending titles to Gemini:", titlesString);
+      const prompt = `Summarize these events in a couple short sentences: ${titlesString}`;
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      setSummary(text);
+    } catch (error) {
+      console.error('Error getting summary:', error);
+      setSummary('Failed to generate summary');
+    }
   };
 
   return (
@@ -134,9 +129,13 @@ function Map() {
       >
         <MapLayers />
         <ZoomControl position="bottomright" />
-        <LocationMarkers events={events} />
-        <DateSliderControl onEventsUpdate={handleEventsUpdate} />
-        <MetricsControl />
+        <LocationMarkers locations={locations} />
+        <DateSliderControl 
+          onDateChange={handleDateChange} 
+          onLimitChange={handleLimitChange}
+          onSliderRelease={handleSliderRelease}
+        />
+        <MetricsControl summary={summary} />
       </MapContainer>
     </div>
   );

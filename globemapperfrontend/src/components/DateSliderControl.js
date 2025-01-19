@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function DateSliderControl({ onDateChange, onLimitChange }) {
+function DateSliderControl({ onDateChange, onLimitChange, onSliderRelease }) {
   // Date slider states and constants
   const endDate = new Date();
   const startDate = new Date();
@@ -59,6 +59,14 @@ function DateSliderControl({ onDateChange, onLimitChange }) {
     });
   };
 
+  const handleDateSliderRelease = () => {
+    onSliderRelease();
+  };
+
+  const handleLimitSliderRelease = () => {
+    onSliderRelease();
+  };
+
   return (
     <div 
       className="leaflet-bottom leaflet-center date-slider-container"
@@ -86,6 +94,8 @@ function DateSliderControl({ onDateChange, onLimitChange }) {
                 onChange={handleDateSliderChange}
                 onMouseDown={preventMapMovement}
                 onTouchStart={preventMapMovement}
+                onMouseUp={handleDateSliderRelease}
+                onTouchEnd={handleDateSliderRelease}
               />
             </div>
           </div>
@@ -107,6 +117,8 @@ function DateSliderControl({ onDateChange, onLimitChange }) {
                 onChange={handleLimitSliderChange}
                 onMouseDown={preventMapMovement}
                 onTouchStart={preventMapMovement}
+                onMouseUp={handleLimitSliderRelease}
+                onTouchEnd={handleLimitSliderRelease}
               />
             </div>
           </div>
