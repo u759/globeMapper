@@ -21,6 +21,7 @@ function CustomPopup({ location }) {
       <div className="popup-content">
         <h3>{location.name}</h3>
         <p>{location.description}</p>
+        <p>{location.date}</p>
         {location.sourceUrl && (
           <div className="popup-footer">
             <span className="read-more">Read more</span>
