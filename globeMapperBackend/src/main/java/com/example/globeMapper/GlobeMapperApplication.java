@@ -16,7 +16,7 @@ public class GlobeMapperApplication {
 
 		EventController e = context.getBean(EventController.class);
 
-		e.saveWeeks(1);
+		//e.saveWeeks(1);
 
 	}
 
