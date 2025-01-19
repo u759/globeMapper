@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -17,13 +18,22 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 function App() {
-  const locations = [
-    {
-      position: [49.2488, -122.9805],
-      name: "Burnaby City Hall",
-      description: "City in British Columbia, home to SFU and BCIT"
-    }
-  ];
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    // Fetch events from the public directory
+    fetch('/events.json')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setEvents(data);
+      })
+      .catch((error) => console.error('Error fetching events:', error));
+  }, []);
 
   return (
     <div className="App">
@@ -36,24 +46,16 @@ function App() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {locations.map((location, index) => (
+        {events.map((event) => (
           <Marker 
-            key={index} 
-            position={location.position}
-            eventHandlers={{
-              mouseover: (e) => {
-                e.target.openPopup();
-              },
-              mouseout: (e) => {
-                e.target.closePopup();
-              }
-            }}
+            key={event.id} 
+            position={[event.latitude, event.longitude]}
           >
             <Popup>
-              <div className="popup-content">
-                <h3>{location.name}</h3>
-                <p>{location.description}</p>
-              </div>
+              <h3>{event.title}</h3>
+              <p>{event.description}</p>
+              <p><strong>Source:</strong> {event.source}</p>
+              <p><strong>Date:</strong> {event.date}</p>
             </Popup>
           </Marker>
         ))}
