@@ -1,3 +1,2 @@
 # globeMapper
-
-<img width="1430" alt="image" src="https://github.com/user-attachments/assets/d49ede32-5971-4ca9-85b4-fd0e686de09c" />
+<img width="1433" alt="image" src="https://github.com/user-attachments/assets/08c24c8d-9464-45f5-92e8-8f838d251448" />
