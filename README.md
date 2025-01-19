@@ -17,7 +17,7 @@ NewsMapper is an interactive news app which scrapes world events and places them
 
 4. Navigate to the frontend folder and install dependencies:
    ```bash
-   cd frontend
+   cd globemapperfrontend
    npm install react-scripts @google/generative-ai @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons
    ```
 
