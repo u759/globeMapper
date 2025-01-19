@@ -1,8 +1,8 @@
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import LocationMarkers from './LocationMarkers';
 import 'leaflet/dist/leaflet.css';
+import '../styles/map.css';
 import { useState } from 'react';
-import { useMap } from 'react-leaflet';
 
 function DateSliderControl() {
   const endDate = new Date();
@@ -26,7 +26,7 @@ function DateSliderControl() {
 
   const getStartOfWeek = (date) => {
     const result = new Date(date);
-    result.setDate(date.getDate() - 6);
+    result.setDate(date.getDate() - 6); // Go back 6 days to get start of week
     return result;
   };
 
@@ -40,37 +40,38 @@ function DateSliderControl() {
 
   return (
     <div 
-      className="leaflet-bottom leaflet-center date-slider-container"
+      className="date-slider-container"
       onMouseDown={preventMapMovement}
       onMouseMove={preventMapMovement}
       onClick={preventMapMovement}
       onTouchStart={preventMapMovement}
       onTouchMove={preventMapMovement}
     >
-      <div className="leaflet-control date-slider-inner">
-        <div className="date-display-container">
-          <div className="date-display">
-            {formatDate(getStartOfWeek(currentEndDate))} - {formatDate(currentEndDate)}
-          </div>
-        </div>
-        <div className="slider-track">
-          <input
-            type="range"
-            min="0"
-            max={totalWeeks}
-            defaultValue={totalWeeks}
-            className="date-slider"
-            onChange={handleSliderChange}
-            onMouseDown={preventMapMovement}
-            onTouchStart={preventMapMovement}
-          />
-        </div>
+      <div className="date-display">
+        {formatDate(getStartOfWeek(currentEndDate))} - {formatDate(currentEndDate)}
+      </div>
+      <div className="slider-track">
+        <input
+          type="range"
+          min="0"
+          max={totalWeeks}
+          defaultValue={totalWeeks}
+          className="date-slider"
+          onChange={handleSliderChange}
+          onMouseDown={preventMapMovement}
+          onTouchStart={preventMapMovement}
+        />
       </div>
     </div>
   );
 }
 
 function Map() {
+  const maxBounds = [
+    [-90, -180], // Southwest coordinates
+    [90, 180]    // Northeast coordinates
+  ];
+
   return (
     <div className="map-container">
       <MapContainer
@@ -78,6 +79,8 @@ function Map() {
         zoom={2}
         scrollWheelZoom={true}
         zoomControl={false}
+        maxBounds={maxBounds}
+        maxBoundsViscosity={1.0}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
