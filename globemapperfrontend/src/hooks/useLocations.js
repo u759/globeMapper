@@ -1,12 +1,29 @@
+import { useState, useEffect } from "react";
+
 export function useLocations() {
-  // You could fetch this from an API or database in the future
-  return [
-    {
-      position: [49.2488, -122.9805],
-      name: "Burnaby City Hall",
-      description: "City in British Columbia, home to SFU and BCIT",
-      imageUrl: "https://www.burnaby.ca/sites/default/files/acquiadam/2021-06/Burnaby-Mountain-19201211.jpg"
-    }
-    // Add more locations as needed
-  ];
-} 
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    fetch("/events.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("✅ Loaded locations:", data); // Debugging log
+        setLocations(
+          data.map((event) => ({
+            position: [event.latitude, event.longitude],
+            name: event.title,
+            description: event.description,
+            imageUrl: event.imageUrl || "",
+          }))
+        );
+      })
+      .catch((error) => console.error("❌ Error fetching locations:", error));
+  }, []);
+
+  return locations;
+}
