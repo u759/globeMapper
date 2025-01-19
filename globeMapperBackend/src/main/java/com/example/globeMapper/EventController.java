@@ -1,18 +1,21 @@
 package com.example.globeMapper;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.zip.*;
 
@@ -23,6 +26,7 @@ public class EventController {
 
     @Autowired
     private EventRepository eventRepository;
+
     @GetMapping("/all")
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
@@ -43,7 +47,9 @@ public class EventController {
         File csvFile = files[0]; // Take the first CSV file found
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        List<Event> events = new ArrayList<>();
+        List<Event> events = new CopyOnWriteArrayList<>();
+
+        ExecutorService executor = Executors.newFixedThreadPool(100);
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             String line;
@@ -55,27 +61,44 @@ public class EventController {
                 e.setId(fields[0]);
                 LocalDate date = LocalDate.parse(fields[1], dateFormatter); // Adjust format if needed
                 e.setDate(date);
-                String title = fields[0]; // Placeholder index
-                e.setTitle(title);
                 String description = fields[52]; // Placeholder index
                 e.setDescription(description);
                 String source = fields[fields.length - 1]; // URL field
                 e.setSource(source);
-                double latitude = fields[56].isEmpty() ? - 999 : Double.parseDouble(fields[56]);
+                double latitude = fields[56].isEmpty() ? -999 : Double.parseDouble(fields[56]);
                 e.setLatitude(latitude);
-                double longitude = fields[57].isEmpty() ? - 999 : Double.parseDouble(fields[57]);
+                double longitude = fields[57].isEmpty() ? -999 : Double.parseDouble(fields[57]);
                 e.setLongitude(longitude);
 
-                events.add(e);
-                // Create a new Record and add to the list
+                Runnable task = () -> {
+                    try {
+                        Document doc = Jsoup.connect(source).get();
+                        String title = doc.title();
+                        e.setTitle(title);
+                        events.add(e);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        e.setTitle(fields[0]);
+                        events.add(e);
+                    }
+                };
+
+                executor.submit(task);
             }
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
 
-        eventRepository.saveAll(events);
+        executor.shutdown();
+        try {
+            System.out.println(executor.awaitTermination(3600, TimeUnit.SECONDS)); // Adjust the timeout as needed
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
+        eventRepository.saveAll(events);
     }
+
     private void downloadEvents() throws IOException {
         FileUtils.cleanDirectory(new File("data"));
         RestTemplate restTemplate = new RestTemplate();
