@@ -36,11 +36,12 @@ public class EventController {
     }
 
     //eg: http://localhost:8080/api/events/within-week?date=20240909
+    //date input-7 days
     @GetMapping("/within-week")
     public List<Event> getEventsWithinWeek(@RequestParam("date") String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate startDate = LocalDate.parse(date, formatter);
-        LocalDate endDate = startDate.plusDays(7);
+        LocalDate endDate = LocalDate.parse(date, formatter);
+        LocalDate startDate = endDate.minusDays(7);
         return eventRepository.findByDateBetween(startDate, endDate);
     }
 
