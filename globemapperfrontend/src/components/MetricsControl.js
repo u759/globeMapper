@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
-function MetricsControl() {
-  const [summary, setSummary] = useState('Loading summary...');
-
+function MetricsControl({ summary }) {
   return (
     <div className="leaflet-left leaflet-middle metrics-container">
       <div className="leaflet-control metrics-panel">
