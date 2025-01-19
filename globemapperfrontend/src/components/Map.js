@@ -2,7 +2,54 @@ import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import LocationMarkers from './LocationMarkers';
 import 'leaflet/dist/leaflet.css';
 import '../styles/map.css';
-import { useState } from 'react';
+import { useMap } from 'react-leaflet';
+import { useState, useEffect } from 'react';
+import { useLocations } from '../hooks/useLocations';
+
+function MetricsControl() {
+  const map = useMap();
+  const [visibleMarkers, setVisibleMarkers] = useState(0);
+  const locations = useLocations();  // Add this import at the top
+
+  useEffect(() => {
+    const updateMetrics = () => {
+      const bounds = map.getBounds();
+      const visible = locations.filter(location => 
+        bounds.contains(location.position)
+      ).length;
+      setVisibleMarkers(visible);
+    };
+
+    // Update metrics when map moves or zooms
+    map.on('moveend', updateMetrics);
+    map.on('zoomend', updateMetrics);
+    
+    // Initial calculation
+    updateMetrics();
+
+    // Cleanup
+    return () => {
+      map.off('moveend', updateMetrics);
+      map.off('zoomend', updateMetrics);
+    };
+  }, [map, locations]);
+
+  return (
+    <div className="leaflet-left leaflet-middle metrics-container">
+      <div className="leaflet-control metrics-panel">
+        <h3>Map Metrics</h3>
+        <div className="metric-item">
+          <span>Visible Markers:</span>
+          <span>{visibleMarkers}</span>
+        </div>
+        <div className="metric-item">
+          <span>Total Markers:</span>
+          <span>{locations.length}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function DateSliderControl() {
   const endDate = new Date();
@@ -89,6 +136,7 @@ function Map() {
         <ZoomControl position="bottomright" />
         <LocationMarkers />
         <DateSliderControl />
+        <MetricsControl />
       </MapContainer>
     </div>
   );
