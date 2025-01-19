@@ -1,7 +1,17 @@
 function CustomPopup({ location }) {
+  const handleClick = () => {
+    if (location.sourceUrl) {
+      window.open(location.sourceUrl, '_blank');
+    }
+  };
+
   return (
-    <div className="popup-content">
-      <h3>{location.name}</h3>
+    <div 
+      className="popup-content" 
+      onClick={handleClick}
+      style={{ cursor: 'pointer' }}
+    >
+      {/* Show the image if it exists */}
       {location.imageUrl && (
         <img 
           src={location.imageUrl} 
@@ -9,14 +19,15 @@ function CustomPopup({ location }) {
           style={{ 
             width: '200px',
             height: 'auto',
-            marginBottom: '10px',
-            borderRadius: '4px'
+            marginBottom: '10px'
           }}
         />
       )}
+
+      <h3>{location.name}</h3>
       <p>{location.description}</p>
     </div>
   );
 }
 
-export default CustomPopup; 
+export default CustomPopup;
