@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -31,6 +33,15 @@ public class EventController {
     @GetMapping("/all")
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
+    }
+
+    //eg: http://localhost:8080/api/events/within-week?date=20240909
+    @GetMapping("/within-week")
+    public List<Event> getEventsWithinWeek(@RequestParam("date") String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate startDate = LocalDate.parse(date, formatter);
+        LocalDate endDate = startDate.plusDays(7);
+        return eventRepository.findByDateBetween(startDate, endDate);
     }
 
     //set weeks == 1 to download today, weeks == 2 to download the last 2 weeks, etc.
