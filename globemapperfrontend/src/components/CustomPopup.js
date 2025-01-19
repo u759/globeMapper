@@ -15,6 +15,7 @@ function CustomPopup({ location }) {
           <img 
             src={location.imageUrl} 
             alt={location.name}
+            loading="lazy"
           />
         </div>
       )}
