@@ -47,7 +47,7 @@ export function useLocations() {
                         };
                     })
                     .filter(event => event !== null)
-                    .slice(0, 20); // Get only first 20 locations
+                    .slice(0, 200); // Get only first 20 locations
 
                 setLocations(formattedLocations);
             })
