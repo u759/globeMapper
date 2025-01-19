@@ -1,0 +1,30 @@
+[
+    {
+      "id": "1",
+      "title": "Breaking News in New York",
+      "description": "A major event is happening in New York City.",
+      "source": "CNN",
+      "date": "2025-01-18",
+      "latitude": 40.7128,
+      "longitude": -74.0060
+    },
+    {
+      "id": "2",
+      "title": "Tech Conference in San Francisco",
+      "description": "The biggest tech conference of the year.",
+      "source": "TechCrunch",
+      "date": "2025-02-10",
+      "latitude": 37.7749,
+      "longitude": -122.4194
+    },
+    {
+      "id": "3",
+      "title": "Protest in Paris",
+      "description": "Thousands gather in protest near the Eiffel Tower.",
+      "source": "BBC News",
+      "date": "2025-03-05",
+      "latitude": 48.8566,
+      "longitude": 2.3522
+    }
+  ]
+  
