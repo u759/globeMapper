@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,79 +33,93 @@ public class EventController {
         return eventRepository.findAll();
     }
 
-    public void saveAllEvents() throws IOException {
-        downloadEvents();   //saves csv file to data folder
+    //set weeks == 1 to download today, weeks == 2 to download the last 2 weeks, etc.
+    public void saveWeeks(int weeks) throws IOException {
 
-        String folderPath = "data"; // Replace with your folder path
-        File folder = new File(folderPath);
+        for (int week = 1; week <= weeks; week++) {
 
-        // Find the first CSV file in the folder
-        File[] files = folder.listFiles((dir, name) -> name.endsWith(".CSV"));
-        if (files == null || files.length == 0) {
-            System.out.println("No CSV files found in the folder.");
-            return;
-        }
-        File csvFile = files[0]; // Take the first CSV file found
+            downloadEvents(LocalDate.now().minusWeeks(week), weeks);
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        List<Event> events = new CopyOnWriteArrayList<>();
+            String folderPath = "data"; // Replace with your folder path
+            File folder = new File(folderPath);
 
-        ExecutorService executor = Executors.newFixedThreadPool(100);
-
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split("\t");
-
-                Event e = new Event();
-                // Adjust indices based on the actual structure of the CSV
-                e.setId(fields[0]);
-                LocalDate date = LocalDate.parse(fields[1], dateFormatter); // Adjust format if needed
-                e.setDate(date);
-                String description = fields[52]; // Placeholder index
-                e.setDescription(description);
-                String source = fields[fields.length - 1]; // URL field
-                e.setSource(source);
-                double latitude = fields[56].isEmpty() ? -999 : Double.parseDouble(fields[56]);
-                e.setLatitude(latitude);
-                double longitude = fields[57].isEmpty() ? -999 : Double.parseDouble(fields[57]);
-                e.setLongitude(longitude);
-
-                Runnable task = () -> {
-                    try {
-                        Document doc = Jsoup.connect(source).get();
-                        String title = doc.title();
-                        e.setTitle(title);
-                        events.add(e);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        e.setTitle(fields[0]);
-                        events.add(e);
-                    }
-                };
-
-                executor.submit(task);
+            // Find the first CSV file in the folder
+            File[] files = folder.listFiles((dir, name) -> name.endsWith(".CSV"));
+            if (files == null || files.length == 0) {
+                System.out.println("No CSV files found in the folder.");
+                return;
             }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-        }
+            File csvFile = files[0]; // Take the first CSV file found
 
-        executor.shutdown();
-        try {
-            System.out.println(executor.awaitTermination(3600, TimeUnit.SECONDS)); // Adjust the timeout as needed
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            List<Event> events = new CopyOnWriteArrayList<>();
 
-        eventRepository.saveAll(events);
+            ExecutorService executor = Executors.newFixedThreadPool(100);
+
+            try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] fields = line.split("\t");
+
+                    Event e = new Event();
+                    // Adjust indices based on the actual structure of the CSV
+                    e.setId(fields[0]);
+                    LocalDate date = LocalDate.parse(fields[1], dateFormatter); // Adjust format if needed
+                    e.setDate(date);
+                    String description = fields[52]; // Placeholder index
+                    e.setDescription(description);
+                    String source = fields[fields.length - 1]; // URL field
+                    e.setSource(source);
+                    double latitude = fields[56].isEmpty() ? -999 : Double.parseDouble(fields[56]);
+                    e.setLatitude(latitude);
+                    double longitude = fields[57].isEmpty() ? -999 : Double.parseDouble(fields[57]);
+                    e.setLongitude(longitude);
+
+                    Runnable task = () -> {
+                        try {
+                            Document doc = Jsoup.connect(source).get();
+                            String title = doc.title();
+                            String img = Objects.requireNonNull(doc.selectFirst("meta[property=og:image]")).attr("content");
+                            e.setTitle(title);
+                            e.setImg(img);
+                            events.add(e);
+                        } catch (Exception ex) {
+
+                        }
+                    };
+
+                    executor.submit(task);
+                }
+            } catch (IOException | NumberFormatException e) {
+                e.printStackTrace();
+            }
+
+            executor.shutdown();
+            try {
+                System.out.println(executor.awaitTermination(3600, TimeUnit.SECONDS)); // Adjust the timeout as needed
+                System.out.println("Week " + week + " done.");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            eventRepository.saveAll(events);
+        }
     }
 
-    private void downloadEvents() throws IOException {
+    private void downloadEvents(LocalDate date, int weeks) throws IOException {
         FileUtils.cleanDirectory(new File("data"));
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "http://data.gdeltproject.org/gdeltv2/lastupdate.txt";
-        String lastUpdate = restTemplate.getForObject(url, String.class);
-        String dlUrl = lastUpdate.substring(lastUpdate.indexOf("http"), lastUpdate.indexOf(".export.CSV.zip") + 15);
+
+        String dlUrl;
+
+        if (weeks == 1) {
+            RestTemplate restTemplate = new RestTemplate();
+            String url = "http://data.gdeltproject.org/gdeltv2/lastupdate.txt";
+            String lastUpdate = restTemplate.getForObject(url, String.class);
+            dlUrl = lastUpdate.substring(lastUpdate.indexOf("http"), lastUpdate.indexOf(".export.CSV.zip") + 15);
+        } else {
+            dlUrl = "http://data.gdeltproject.org/gdeltv2/" + DateTimeFormatter.ofPattern("yyyyMMdd").format(date) + "230000.export.CSV.zip";
+        }
+
 
         try {
             try (BufferedInputStream in = new BufferedInputStream(new URL(dlUrl).openStream());
@@ -145,6 +160,7 @@ public class EventController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     private static void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
