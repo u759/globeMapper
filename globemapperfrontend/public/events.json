@@ -1,0 +1,43 @@
+[
+    {
+      "id": "1",
+      "title": "Tech Conference 2025",
+      "description": "A major tech conference featuring AI advancements.",
+      "source": "TechCrunch",
+      "date": "2025-03-15",
+      "latitude": 37.7749,
+      "longitude": -122.4194,
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Golden_Gate_Bridge_SF.jpg"
+    },
+    {
+      "id": "2",
+      "title": "Climate Change Summit",
+      "description": "Global leaders discuss climate policies and innovations.",
+      "source": "BBC News",
+      "date": "2025-06-20",
+      "latitude": 48.8566,
+      "longitude": 2.3522,
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Paris_Night.jpg"
+    },
+    {
+      "id": "3",
+      "title": "SpaceX Launch Event",
+      "description": "SpaceX is launching its next-gen rocket to Mars!",
+      "source": "NASA",
+      "date": "2025-09-05",
+      "latitude": 28.5721,
+      "longitude": -80.648,
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e0/SpaceX_Falcon_Heavy_Launch.jpg"
+    },
+    {
+      "id": "4",
+      "title": "Music Festival 2025",
+      "description": "One of the biggest music festivals of the year.",
+      "source": "Rolling Stone",
+      "date": "2025-07-10",
+      "latitude": 51.5074,
+      "longitude": -0.1278,
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2d/London_Eye_at_Night.jpg"
+    }
+  ]
+  
