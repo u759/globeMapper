@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {
@@ -39,7 +42,8 @@
 
 .leaflet-container {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 56px);
+  margin-top: 56px;
 }
 
 .popup-content {
