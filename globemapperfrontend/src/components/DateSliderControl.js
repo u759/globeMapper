@@ -9,7 +9,7 @@ function DateSliderControl({ onDateChange, onLimitChange, onSliderRelease }) {
   const [currentEndDate, setCurrentEndDate] = useState(endDate);
 
   // Marker limit slider states and constants
-  const maxMarkers = 150;
+  const maxMarkers = 300;
   const minMarkers = 5;
   const defaultMarkers = 50;
   const step = 5;

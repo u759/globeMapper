@@ -17,7 +17,7 @@ let count = 0;
 
 function Map() {
   const [currentDate, setCurrentDate] = useState(null);
-  const [markerLimit, setMarkerLimit] = useState(500);
+  const [markerLimit, setMarkerLimit] = useState(50);
   const [summary, setSummary] = useState('Loading summary...');
   const { locations, isLoading } = useLocations(currentDate, markerLimit);
 

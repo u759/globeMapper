@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 
-export function useLocations(date, limit = 500) {
+export function useLocations(date, limit = 50) {
     const [locations, setLocations] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 

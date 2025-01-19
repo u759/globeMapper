@@ -31,7 +31,7 @@ function LocationMarkers({ locations }) {
                             click: (e) => e.target.openPopup()
                         }}
                     >
-                        <Popup>
+                        <Popup autoPan={false}>
                             <CustomPopup location={location} />
                         </Popup>
                     </Marker>
