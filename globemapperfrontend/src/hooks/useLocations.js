@@ -42,7 +42,7 @@ export function useLocations() {
                             description: event.description,
                             sourceUrl: event.source,
                             date: event.date,
-                            imageUrl: null,
+                            imageUrl: event.img,
                             position: [event.latitude, event.longitude],
                         };
                     })
@@ -51,7 +51,7 @@ export function useLocations() {
 
                 setLocations(formattedLocations);
             })
-            .catch((error) => console.error("❌ Error fetching locations:", error));
+            .catch((error) => console.error(" Error fetching locations:", error));
     }, []);
 
     return locations;
