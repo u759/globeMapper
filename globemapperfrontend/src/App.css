@@ -201,3 +201,113 @@
     background-position: center;
     background-repeat: no-repeat;
 }
+
+.date-slider-container {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: 20px !important;
+  z-index: 1000;
+  width: auto;
+  transform: translateX(-50%) scale(0.65);
+  transform-origin: bottom center;
+}
+
+.date-slider-inner {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  min-width: 500px;
+  margin: 0 auto;
+}
+
+/* Style for the slider track */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 120px;
+  height: 4px;
+  background: #ddd;
+  border-radius: 5px;
+  outline: none;
+  margin: 0;
+}
+
+/* Style for the slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #000;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #000;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+/* Style for the slider track in Firefox */
+input[type="range"]::-moz-range-track {
+  background: #ddd;
+  height: 5px;
+  border-radius: 5px;
+}
+
+.sliders-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Reduce the gap to bring the sliders closer */
+}
+
+.slider-column {
+  flex: 0 1 auto;
+  text-align: center;
+  width: 250px; /* Reduce the width if necessary */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px; /* Optional: Add some space below the sliders */
+}
+
+.slider-headers {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 0;
+}
+
+.slider-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  width: 300px;
+  text-align: center;
+}
+
+.date-display-container,
+.limit-display-container {
+  margin-bottom: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.date-display,
+.limit-display {
+  font-size: 14px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.slider-track {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
