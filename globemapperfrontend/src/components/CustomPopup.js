@@ -1,28 +1,33 @@
 function CustomPopup({ location }) {
-    return (
-      <div className="popup-content" style={{ textAlign: "center" }}>
-        <h3>{location.name}</h3>
+  const handleClick = () => {
+    if (location.sourceUrl) {
+      window.open(location.sourceUrl, '_blank');
+    }
+  };
 
-        {/* Show the image if it exists */}
-        {location.imageUrl ? (
-          <img
-            src={location.imageUrl}
-            alt={location.name}
-            style={{
-              display: "block",
-              margin: "10px auto",
-              width: "200px",
-              height: "auto",
-              borderRadius: "4px",
-            }}
-          />
-        ) : (
-          <p>Loading image...</p>  // ✅ Show text if image is still loading
-        )}
+  return (
+    <div 
+      className="popup-content" 
+      onClick={handleClick}
+      style={{ cursor: 'pointer' }}
+    >
+      {/* Show the image if it exists */}
+      {location.imageUrl && (
+        <img 
+          src={location.imageUrl} 
+          alt={location.name}
+          style={{ 
+            width: '200px',
+            height: 'auto',
+            marginBottom: '10px'
+          }}
+        />
+      )}
 
-        <p>{location.description}</p>
-      </div>
-    );
+      <h3>{location.name}</h3>
+      <p>{location.description}</p>
+    </div>
+  );
 }
 
 export default CustomPopup;
