@@ -14,6 +14,7 @@ public class Event {
     private String title;
     private String description;
     private String source;
+    private String img;
     private LocalDate date;
     private double latitude;  // Latitude coordinate
     private double longitude; // Longitude coordinate
@@ -49,6 +50,14 @@ public class Event {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getImg() {
+        return img;
     }
 
     public LocalDate getDate() {
