@@ -21,8 +21,8 @@ function App() {
   return (
     <div className="App">
       <MapContainer 
-        center={[51.505, -0.09]} 
-        zoom={13} 
+        center={[49.2827, -123.1207]}
+        zoom={12}
         style={{ height: "100vh", width: "100%" }}
       >
         <TileLayer
