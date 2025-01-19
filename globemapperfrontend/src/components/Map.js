@@ -7,27 +7,39 @@ import { useState } from 'react';
 import { useMap } from 'react-leaflet';
 
 function DateSliderControl() {
-  // Calculate start date (1 year ago from today)
-  const startDate = new Date();
-  startDate.setFullYear(startDate.getFullYear() - 1);
-  
-  // End date is today
+  // Calculate end date (today)
   const endDate = new Date();
+  // Calculate start date (52 weeks ago)
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - (52 * 7)); // Go back 52 weeks
   
-  // Calculate total days between dates
-  const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+  const totalWeeks = 52; // Fixed number of weeks
   
-  const [selectedDate, setSelectedDate] = useState(startDate);
+  const [currentEndDate, setCurrentEndDate] = useState(endDate);
 
   const handleSliderChange = (e) => {
     e.stopPropagation();
-    const days = parseInt(e.target.value);
-    const newDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
-    setSelectedDate(newDate);
+    const weeks = parseInt(e.target.value);
+    const newEndDate = new Date(endDate.getTime() - ((totalWeeks - weeks) * 7 * 24 * 60 * 60 * 1000));
+    setCurrentEndDate(newEndDate);
   };
 
   const preventMapMovement = (e) => {
     e.stopPropagation();
+  };
+
+  const getStartOfWeek = (date) => {
+    const result = new Date(date);
+    result.setDate(date.getDate() - 6); // Go back 6 days
+    return result;
+  };
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric'
+    });
   };
 
   return (
@@ -40,23 +52,23 @@ function DateSliderControl() {
       onTouchMove={preventMapMovement}
     >
       <div className="leaflet-control date-slider-inner">
-        <div className="date-display">
-          {selectedDate.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
+        <div className="date-display-container">
+          <div className="date-display">
+            {formatDate(getStartOfWeek(currentEndDate))} - {formatDate(currentEndDate)}
+          </div>
         </div>
-        <input
-          type="range"
-          min="0"
-          max={totalDays}
-          defaultValue="0"
-          className="date-slider"
-          onChange={handleSliderChange}
-          onMouseDown={preventMapMovement}
-          onTouchStart={preventMapMovement}
-        />
+        <div className="slider-track">
+          <input
+            type="range"
+            min="0"
+            max={totalWeeks}
+            defaultValue={totalWeeks}
+            className="date-slider"
+            onChange={handleSliderChange}
+            onMouseDown={preventMapMovement}
+            onTouchStart={preventMapMovement}
+          />
+        </div>
       </div>
     </div>
   );
