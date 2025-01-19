@@ -3,11 +3,11 @@
       "id": "1",
       "title": "Tech Conference 2025",
       "description": "A major tech conference featuring AI advancements.",
-      "source": "TechCrunch",
+      "source": "https://www.newswire.ca/news-releases/ces-2025-the-global-stage-for-innovation-connecting-the-world-creating-the-future-815155877.html",
       "date": "2025-03-15",
       "latitude": 37.7749,
       "longitude": -122.4194,
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Golden_Gate_Bridge_SF.jpg"
+      "imageUrl": ""
     },
     {
       "id": "2",
