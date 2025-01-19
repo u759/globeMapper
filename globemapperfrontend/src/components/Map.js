@@ -3,19 +3,26 @@ import LocationMarkers from './LocationMarkers';
 import MapLayers from './MapLayers';
 import DateSliderControl from './DateSliderControl';
 import { useState } from 'react';
+import { useLocations } from '../hooks/useLocations';
 import 'leaflet/dist/leaflet.css';
 import '../styles/map.css';
 
 function Map() {
-  const [events, setEvents] = useState([]);
+  const [currentDate, setCurrentDate] = useState(null);
+  const [markerLimit, setMarkerLimit] = useState(500);
+  const { locations, isLoading } = useLocations(currentDate, markerLimit);
 
   const maxBounds = [
     [-90, -180], // Southwest coordinates
     [90, 180]    // Northeast coordinates
   ];
 
-  const handleEventsUpdate = (newEvents) => {
-    setEvents(newEvents);
+  const handleDateChange = (formattedDate) => {
+    setCurrentDate(formattedDate);
+  };
+
+  const handleLimitChange = (newLimit) => {
+    setMarkerLimit(newLimit);
   };
 
   return (
@@ -32,8 +39,12 @@ function Map() {
       >
         <MapLayers />
         <ZoomControl position="bottomright" />
-        <LocationMarkers events={events} />
-        <DateSliderControl onEventsUpdate={handleEventsUpdate} />
+        {!isLoading && <LocationMarkers locations={locations} />}
+        <DateSliderControl 
+          onDateChange={handleDateChange}
+          onLimitChange={handleLimitChange}
+          isLoading={isLoading}
+        />
       </MapContainer>
     </div>
   );
