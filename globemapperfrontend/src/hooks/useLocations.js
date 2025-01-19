@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 
-export function useLocations(date, limit = 50) {
+export function useLocations(date, limit = 500) {
     const [locations, setLocations] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -9,6 +9,7 @@ export function useLocations(date, limit = 50) {
         console.log("✅ Processing locations:", data.length);
         
         const seenCoordinates = new Set();
+        const seenTitles = new Set();  // Add this to track seen titles
         
         return data
             .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -20,11 +21,13 @@ export function useLocations(date, limit = 50) {
 
                 const coordKey = `${event.latitude},${event.longitude}`;
                 
-                if (seenCoordinates.has(coordKey)) {
+                // Check for both coordinate and title duplicates
+                if (seenCoordinates.has(coordKey) || seenTitles.has(event.title)) {
                     return null;
                 }
                 
                 seenCoordinates.add(coordKey);
+                seenTitles.add(event.title);  // Add title to seen set
 
                 return {
                     id: event.id,
@@ -32,7 +35,7 @@ export function useLocations(date, limit = 50) {
                     description: event.description,
                     sourceUrl: event.source,
                     date: event.date,
-                    imageUrl: event.img,
+                    imageUrl: event.img || event.urlToImage || event.image_url,
                     position: [event.latitude, event.longitude],
                 };
             })
