@@ -211,109 +211,105 @@
 .date-slider-container {
   position: fixed !important;
   left: 50% !important;
-  bottom: 20px !important;
+  bottom: 30px !important;
   z-index: 1000;
   width: auto;
-  transform: translateX(-50%) scale(0.65);
-  transform-origin: bottom center;
+  transform: translateX(-50%);
 }
 
 .date-slider-inner {
   background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  min-width: 500px;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  min-width: 480px;
+  max-width: 500px;
   margin: 0 auto;
-}
-
-/* Style for the slider track */
-input[type="range"] {
-  -webkit-appearance: none;
-  width: 120px;
-  height: 4px;
-  background: #ddd;
-  border-radius: 5px;
-  outline: none;
-  margin: 0;
-}
-
-/* Style for the slider thumb */
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  background: #000;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-input[type="range"]::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  background: #000;
-  border-radius: 50%;
-  cursor: pointer;
-  border: none;
-}
-
-/* Style for the slider track in Firefox */
-input[type="range"]::-moz-range-track {
-  background: #ddd;
-  height: 5px;
-  border-radius: 5px;
-}
-
-.sliders-row {
-  display: flex;
-  justify-content: center;
-  gap: 10px; /* Reduce the gap to bring the sliders closer */
-}
-
-.slider-column {
-  flex: 0 1 auto;
-  text-align: center;
-  width: 250px; /* Reduce the width if necessary */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px; /* Optional: Add some space below the sliders */
 }
 
 .slider-headers {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 10px;
+  gap: 40px;
+  margin-bottom: 15px;
   width: 100%;
-  padding: 0;
+  max-width: 440px;
+  margin: 0 auto 15px;
 }
 
 .slider-title {
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-  width: 300px;
+  width: 200px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
   text-align: center;
-}
-
-.date-display-container,
-.limit-display-container {
-  margin-bottom: 10px;
-  text-align: center;
-  width: 100%;
 }
 
 .date-display,
 .limit-display {
-  font-size: 14px;
-  margin-bottom: 8px;
-  text-align: center;
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: #333;
+  font-weight: 500;
 }
 
-.slider-track {
-  width: 100%;
+/* Enhanced slider styles */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 200px;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  outline: none;
+  margin: 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #282c34;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #2196F3;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+
+.sliders-row {
   display: flex;
   justify-content: center;
+  padding: 0;
+  gap: 40px;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.slider-column {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
 }
