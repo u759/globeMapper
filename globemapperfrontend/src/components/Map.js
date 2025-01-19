@@ -27,7 +27,7 @@ function Map() {
         zoomControl={false}
         maxBounds={maxBounds}
         maxBoundsViscosity={1.0}
-        minZoom={2}
+        minZoom={2.4}
         worldCopyJump={false}
       >
         <MapLayers />
