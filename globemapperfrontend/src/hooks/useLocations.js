@@ -51,7 +51,7 @@ export function useLocations(date, limit = 500) {
             try {
                 if (date) {
                     const dateResponse = await fetch(
-                        `http://localhost:8080/api/events/within-week?date=${date}`
+                        `http://138.2.226.216:8081/api/events/within-week?date=${date}`
                     );
                     if (!dateResponse.ok) {
                         throw new Error("Network response was not ok");
@@ -60,7 +60,7 @@ export function useLocations(date, limit = 500) {
                     
                     if (!dateData || dateData.length === 0) {
                         console.log("⚠ No events found for date, falling back to all events");
-                        const allResponse = await fetch("http://localhost:8080/api/events/all");
+                        const allResponse = await fetch("http://138.2.226.216:8081/api/events/all");
                         if (!allResponse.ok) {
                             throw new Error("Network response was not ok");
                         }
@@ -72,7 +72,7 @@ export function useLocations(date, limit = 500) {
                         setLocations(processed);
                     }
                 } else {
-                    const response = await fetch("http://localhost:8080/api/events/all");
+                    const response = await fetch("http://138.2.226.216:8081/api/events/all");
                     if (!response.ok) {
                         throw new Error("Network response was not ok");
                     }
