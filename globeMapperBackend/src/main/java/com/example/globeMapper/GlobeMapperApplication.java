@@ -12,12 +12,8 @@ import java.io.IOException;
 public class GlobeMapperApplication {
 
 	public static void main(String[] args) throws IOException {
-		ApplicationContext context = SpringApplication.run(GlobeMapperApplication.class, args);
-
-		EventController e = context.getBean(EventController.class);
-
-		//e.saveWeeks(1);
-
+		// This line is removed: e.saveWeeks(1);
+		SpringApplication.run(GlobeMapperApplication.class, args);
 	}
 
 }
