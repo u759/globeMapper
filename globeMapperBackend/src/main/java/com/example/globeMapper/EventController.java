@@ -48,7 +48,7 @@ public class EventController {
     //set weeks == 1 to download today, weeks == 2 to download the last 2 weeks, etc.
     public void saveWeeks(int weeks) throws IOException {
 
-        for (int week = 1; week <= weeks; week++) {
+        for (int week = 0; week < weeks; week++) {
 
             downloadEvents(LocalDate.now().minusWeeks(week), weeks);
 
