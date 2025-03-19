@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 
-export function useLocations(date, limit = 500) {
+export function useLocations(date, limit = 500, searchQuery = '') {
     const [locations, setLocations] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -41,6 +41,17 @@ export function useLocations(date, limit = 500) {
             })
             .filter(event => event !== null)
             .slice(0, limit);
+    }, []);
+
+    // Add search filtering capability
+    const filterBySearch = useCallback((locationsArray, query) => {
+        if (!query || query.trim() === '') return locationsArray;
+        
+        const lowerQuery = query.toLowerCase();
+        return locationsArray.filter(location => 
+            (location.name && location.name.toLowerCase().includes(lowerQuery)) ||
+            (location.description && location.description.toLowerCase().includes(lowerQuery))
+        );
     }, []);
 
     useEffect(() => {
@@ -98,5 +109,10 @@ export function useLocations(date, limit = 500) {
         };
     }, [date, limit, processLocations]);
 
-    return { locations, isLoading };
+    // Filter locations based on search query
+    const filteredLocations = useMemo(() => {
+        return filterBySearch(locations, searchQuery);
+    }, [locations, searchQuery, filterBySearch]);
+
+    return { locations: filteredLocations, isLoading };
 }
