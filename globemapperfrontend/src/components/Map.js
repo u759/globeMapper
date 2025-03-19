@@ -2,12 +2,11 @@ import { MapContainer, ZoomControl } from 'react-leaflet';
 import LocationMarkers from './LocationMarkers';
 import MapLayers from './MapLayers';
 import DateSliderControl from './DateSliderControl';
-import MetricsControl from './MetricsControl';
+import SearchControl from './SearchControl'; // Import the new component
 import { useState, useEffect } from 'react';
 import { useLocations } from '../hooks/useLocations';
 import 'leaflet/dist/leaflet.css';
-import '../styles/map.css';
-import { useMap } from 'react-leaflet';
+import '../styles/App.css';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize Gemini AI
@@ -18,8 +17,8 @@ let count = 0;
 function Map() {
   const [currentDate, setCurrentDate] = useState(null);
   const [markerLimit, setMarkerLimit] = useState(50);
-  const [summary, setSummary] = useState('Loading summary...');
-  const { locations, isLoading } = useLocations(currentDate, markerLimit);
+  const [searchQuery, setSearchQuery] = useState(''); // Add state for search query
+  const { locations, isLoading } = useLocations(currentDate, markerLimit, searchQuery); // Pass search query to hook
 
   useEffect(() => {
     if (!isLoading && locations.length > 0 && count === 0) {
@@ -40,31 +39,14 @@ function Map() {
   const handleLimitChange = (newLimit) => {
     setMarkerLimit(newLimit);
   };
+  
+  // Add handler for search changes
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+  };
 
   const handleSliderRelease = async () => {
     if (!Array.isArray(locations) || locations.length === 0) return;
-    try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const titles = locations
-        .filter(location => location && location.name)
-        .map(location => location.name);
-      if (titles.length === 0) {
-        setSummary('No event titles available');
-        return;
-      }
-      const titlesString = titles.join(", ");
-      console.log("Sending titles to Gemini:", titlesString);
-      const prompt = `Summarize these events in a couple short sentences: ${titlesString}`;
-      
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
-      setSummary(text);
-      
-    } catch (error) {
-      console.error('Error getting summary:', error);
-      setSummary('Failed to generate summary');
-    }
   };
 
   return (
@@ -82,15 +64,18 @@ function Map() {
         <MapLayers />
         <ZoomControl position="bottomright" />
         <LocationMarkers locations={locations} />
+        <SearchControl 
+          locations={locations} 
+          onSearchChange={handleSearchChange} 
+        />
         <DateSliderControl 
           onDateChange={handleDateChange} 
           onLimitChange={handleLimitChange}
           onSliderRelease={handleSliderRelease}
         />
-        <MetricsControl summary={summary} />
       </MapContainer>
     </div>
   );
 }
 
-export default Map; 
+export default Map;
